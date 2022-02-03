@@ -1,3 +1,47 @@
+(()=>{
+
+  const $doc = document;
+  const $tab = $doc.getElementById('js-tab');
+  const $nav = $tab.querySelectorAll('[data-nav]');
+  const $content = $tab.querySelectorAll('[data-content]');
+  const ACTIVE_CLASS = 'is-active';
+  const navlen = $nav.length;
+
+  // 初期化
+  const init = () => {
+    $content[0].style.display = 'block';
+  };
+  init();
+
+  // クリックしたら起こるイベント
+  const handleClick = (e) => {
+    e.preventDefault();
+
+    //クリックされたnavとそのdataを取得
+    const $this = e.target;
+    const targetVal = $this.dataset.nav;
+
+    //対象外のnav,contentを全て一旦リセットする
+    let index = 0;
+    while(index < navlen){
+      $content[index].style.display = 'none';
+      $nav[index].classList.remove(ACTIVE_CLASS);
+      index++;
+    }
+
+    //対象のコンテンツをアクティブ化する
+    $tab.querySelectorAll('[data-content="' + targetVal + '"]')[0].style.display = 'block'
+    $nav[targetVal].classList.add(ACTIVE_CLASS);
+
+  };
+
+  // 全nav要素に対して関数を適応・発火
+  let index = 0;
+  while(index < navlen){
+      $nav[index].addEventListener('click', (e) => handleClick(e));
+      index++;    
+  }
+
 const quiz = [
   {
     question: 'ゲーム市場、最も売れたゲーム機は次のうちどれ？',
@@ -35,10 +79,12 @@ let score = 0;
 
 const $button = document.getElementsByTagName('button');
 const buttonLength = $button.length;
+const result = document.getElementById('result');
+const container = document.getElementById('container')
 
 //クイズの問題文、選択肢を定義
 const setupQuiz = () => {
-  document.getElementById('js-qusetion').textContent = quiz[quizIndex].question;
+  document.getElementById('js-qusetion').textContent = '問題： ' + quiz[quizIndex].question;
   let buttonIndex = 0;
   while (buttonIndex < buttonLength){
     $button[buttonIndex].textContent = quiz[quizIndex].answers[buttonIndex];
@@ -46,6 +92,7 @@ const setupQuiz = () => {
   }
 }
 setupQuiz();
+
 
 const clickHandler = (e) => {
     if(quiz[quizIndex].correct === e.target.textContent){
@@ -60,8 +107,18 @@ const clickHandler = (e) => {
   if(quizIndex < quizLength){
     setupQuiz();
   } else {
-    window.alert('終了！あなたの正解数は' + score + '/' + quizLength + 'です！');
-  }
+    window.alert('終了です！');
+    result.style.display = 'block';
+    container.style.display = 'none';
+    document.getElementById('score2').textContent = 'あなたの正解数は' + quizLength + '問中 ' + score + '問です！';
+    document.getElementById('js_qusetion1').textContent = 'Q1. ' + quiz[0].question;
+    document.getElementById('correct1').textContent = '答え: ' + quiz[0].correct;
+    document.getElementById('js_qusetion2').textContent = 'Q2. ' + quiz[1].question;
+    document.getElementById('correct2').textContent = '答え: ' + quiz[1].correct;
+    document.getElementById('js_qusetion3').textContent = 'Q3. ' + quiz[2].question;
+    document.getElementById('correct3').textContent = '答え: ' + quiz[2].correct;
+    }
+  
 
 };
 
@@ -73,3 +130,7 @@ while (handlerIndex < buttonLength) {
   });
   handlerIndex++;
 }
+
+
+
+})();
